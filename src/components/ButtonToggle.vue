@@ -23,7 +23,7 @@ export default {
       tags: [
         {title: "Trim", routeName: "sample-01"},
         {title: "Rotate", routeName: "sample-02"},
-        {title: "Show exif", routeName: "sample-03"},
+        {title: "Show meta-data", routeName: "sample-03"}
       ]
     }
   },
