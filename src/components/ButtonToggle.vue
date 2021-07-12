@@ -21,9 +21,9 @@ export default {
   data() {
     return {
       tags: [
-        {title: "01", routeName: "sample-01"},
-        {title: "02", routeName: "sample-02"},
-        {title: "03", routeName: "sample-03"},
+        {title: "Trim", routeName: "sample-01"},
+        {title: "Rotate", routeName: "sample-02"},
+        {title: "Show exif", routeName: "sample-03"},
       ]
     }
   },

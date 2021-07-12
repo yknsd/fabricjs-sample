@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Sample01 from "../components/Sample01";
+import Sample03 from "../components/Sample03";
 
 Vue.use(VueRouter)
 
@@ -18,7 +19,7 @@ const routes = [
   {
     path: '/',
     name: "sample-03",
-    component: Sample01
+    component: Sample03
   },
 ]
 
