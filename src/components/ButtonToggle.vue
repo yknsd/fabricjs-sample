@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       tags: [
-        {title: "Trim", routeName: "sample-01"},
+        {title: "Crop", routeName: "sample-01"},
         {title: "Rotate", routeName: "sample-02"},
         {title: "Show meta-data", routeName: "sample-03"}
       ]
