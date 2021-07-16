@@ -116,8 +116,8 @@ export default {
       }
       const options = {
         canvas: true,
-        maxWidth: 8192,
-        maxHeight: 8192
+        maxWidth: MAX_WIDTH,
+        maxHeight: MAX_HEIGHT
       };
       console.log("loadImageFunction:", file, options);
       const result = await loadImage(file, options)
@@ -164,6 +164,9 @@ export default {
       this.imgSrc = croppedImage.toDataURL(this.originalBlob.type);
     },
     clear() {
+      if (this.imgSrc) {
+        URL.revokeObjectURL(this.imgSrc);
+      }
       this.imgSrc = null;
       this.$set(this, "errorMessages", []);
     },
@@ -213,7 +216,10 @@ export default {
       if (this.selectedIndex === index) return;
       this.selectedIndex = index;
       this.selectedWidth = this.lists[index].width;
-    }
+    },
+  },
+  beforeDestroy() {
+    this.clear();
   }
 }
 </script>

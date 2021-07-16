@@ -79,9 +79,15 @@ export default {
       this.maxHeight = result.originalHeight < MAX_HEIGHT ? result.originalHeight : MAX_HEIGHT;
     },
     clear() {
+      if (this.imgSrc) {
+        URL.revokeObjectURL(this.imgSrc);
+      }
       this.imgSrc = null;
       this.$set(this, "errorMessages", []);
     }
+  },
+  beforeDestroy() {
+    this.clear();
   }
 }
 </script>
