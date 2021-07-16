@@ -29,7 +29,9 @@ export default {
   },
   methods: {
     goTo(name) {
-      this.$router.push({name: name});
+      if (this.$route.name !== name) {
+        this.$router.push({name: name});
+      }
     }
   }
 }
