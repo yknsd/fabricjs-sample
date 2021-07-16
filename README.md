@@ -1,8 +1,22 @@
-# blue-imp-sample
+
+This is sample app for [blueimp/Javascript-Load-Image](https://github.com/blueimp/JavaScript-Load-Image)
+
+I created it to help my understanding.
+
+## Function
+
+* Crop
+* Rotate
+* Show meta-data
+
+## Version
+
+* blueimp-load-image 5.14.0
+* Vue 2.6.11
 
 ## Project setup
 ```
-yarn install
+yarn
 ```
 
 ### Compiles and hot-reloads for development
@@ -10,15 +24,3 @@ yarn install
 yarn serve
 ```
 
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
