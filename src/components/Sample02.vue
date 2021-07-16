@@ -13,19 +13,32 @@
       ></v-file-input>
     </v-row>
 
-    <v-row>
-      <p v-if="0 < errorMessages.length" class="red--text body-2">{{ errorMessages }}</p>
-      <v-img
+    <v-row class="mt-5">
+      <v-card
         v-if="imgSrc"
-        :src="imgSrc"
-        max-height="700"
-      />
+        class="card-class"
+      >
+        <v-card-title class="text-left">Image</v-card-title>
+        <v-card-text class="text-left">
+
+          <p v-if="0 < errorMessages.length" class="red--text body-2">{{ errorMessages }}</p>
+          <v-img
+            :src="imgSrc"
+            :max-height="maxHeight"
+            :max-width="maxWidth"
+            contain
+          />
+        </v-card-text>
+      </v-card>
     </v-row>
   </v-col>
 </template>
 
 <script>
 import loadImage from 'blueimp-load-image';
+
+const MAX_WIDTH = 500;
+const MAX_HEIGHT=500;
 
 export default {
   data() {
@@ -34,6 +47,8 @@ export default {
         value => !value || value.size < 2000000 || 'Image size should be less than 2 MB!',
       ],
       imgSrc: null,
+      maxWidth: MAX_WIDTH,
+      maxHeight: MAX_HEIGHT,
       errorMessages: [],
       error: false
     };
@@ -49,19 +64,19 @@ export default {
         orientation: 3
       };
 
-      const rotatedUrl = await loadImage(file, options)
-        .then(function (data) {
-            return data.image.toDataURL(file.type);
-          }
-        )
-        .catch(function (error) {
-          console.log(error);
-        });
+      const result = await loadImage(file, options).then(function (data) {
+        return data;
+      }).catch(function (error) {
+        console.log("loading error:", error);
+      });
 
-      if (rotatedUrl) {
-        this.imgSrc = rotatedUrl;
+      console.log("result:", result);
+      if (this.imgSrc) {
+        URL.revokeObjectURL(this.imgSrc);
       }
-
+      this.imgSrc = result.image.toDataURL(file.type);
+      this.maxWidth = result.originalWidth < MAX_WIDTH ? result.originalWidth : MAX_WIDTH;
+      this.maxHeight = result.originalHeight < MAX_HEIGHT ? result.originalHeight : MAX_HEIGHT;
     },
     clear() {
       this.imgSrc = null;
