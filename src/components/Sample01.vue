@@ -13,31 +13,21 @@
       ></v-file-input>
     </ValidationProvider>
 
-    <v-row class="mt-10">
-      <v-card
-        v-if="imgSrc"
-        class="card-class"
-      >
-        <v-card-title class="text-left">Image</v-card-title>
-        <v-card-text class="text-left">
-          <p v-if="0 < errorMessages.length" class="red--text body-2">{{ errorMessages }}</p>
-          <img
-            :src="imgSrc"
-            alt="preview"
-          />
-        </v-card-text>
-      </v-card>
+    <v-row v-if="imgSrc" class="mt-10">
+      <ImageEditor :img-src="imgSrc" />
     </v-row>
   </v-col>
 </template>
 
 <script>
 import loadImage from 'blueimp-load-image';
+import ImageEditor from "./editor/ImageEditor";
 
 const MAX_WIDTH = 8192;
 const MAX_HEIGHT = 8192;
 
 export default {
+  components: {ImageEditor},
   data() {
     return {
       rules: [
@@ -99,10 +89,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.card-class{
-  width: 100%;
-  min-height: 400px;
-}
-</style>
