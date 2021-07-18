@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Sample01 from "../components/Sample01";
-import Sample02 from "../components/Sample02";
-import Sample03 from "../components/Sample03";
 
 Vue.use(VueRouter)
 
@@ -11,16 +9,6 @@ const routes = [
     path: '/',
     name: "sample-01",
     component: Sample01
-  },
-  {
-    path: '/',
-    name: "sample-02",
-    component: Sample02
-  },
-  {
-    path: '/',
-    name: "sample-03",
-    component: Sample03
   },
 ]
 

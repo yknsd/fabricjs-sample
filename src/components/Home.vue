@@ -6,23 +6,18 @@
           sample
         </h1>
         <h2 class="subtitle-1">
-          blueimp-load-image
+          fabricjs
         </h2>
       </v-col>
-
-      <ButtonToggle class="mb-5" />
-
       <router-view />
     </v-row>
   </v-container>
 </template>
 
 <script>
-import ButtonToggle from "./ButtonToggle";
 
 export default {
   components: {
-    ButtonToggle
   }
 }
 </script>
