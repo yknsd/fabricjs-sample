@@ -14,7 +14,11 @@
     </ValidationProvider>
 
     <v-row v-if="imgSrc" class="mt-10">
-      <ImageEditor :img-src="imgSrc" />
+      <ImageEditor
+        :img-src="imgSrc"
+        :canvas-width="canvasWidth"
+        :canvas-height="canvasHeight"
+      />
     </v-row>
   </v-col>
 </template>
@@ -23,8 +27,10 @@
 import loadImage from 'blueimp-load-image';
 import ImageEditor from "./editor/ImageEditor";
 
-const MAX_WIDTH = 8192;
-const MAX_HEIGHT = 8192;
+const MAX_WIDTH = 800;
+const MIN_WIDTH = 300;
+const MAX_HEIGHT = 800;
+const MIN_HEIGHT = 300;
 
 export default {
   components: {ImageEditor},
@@ -34,6 +40,8 @@ export default {
         value => !value || value.size < 2000000 || 'Image size should be less than 2 MB!',
       ],
       imgSrc: null,
+      canvasWidth: MAX_WIDTH,
+      canvasHeight: MAX_HEIGHT,
       originalBlob: null,
       errorMessages: [],
     };
@@ -55,7 +63,8 @@ export default {
       const options = {
         canvas: true,
         maxWidth: MAX_WIDTH,
-        maxHeight: MAX_HEIGHT
+        maxHeight: MAX_HEIGHT,
+        contain: true
       };
       console.log("loadImageFunction:", file, options);
       const result = await loadImage(file, options)
@@ -73,6 +82,8 @@ export default {
         });
 
       console.log("result:", result);
+      this.canvasWidth = result.originalWidth < MAX_WIDTH ? (result.originalWidth < MIN_WIDTH ? MIN_WIDTH : result.originalWidth) : MAX_WIDTH;
+      this.canvasHeight = result.originalHeight < MAX_HEIGHT ? (result.originalHeight < MIN_HEIGHT ? MIN_HEIGHT : result.originalHeight) : MAX_HEIGHT;
       this.imgSrc = result.url;
       this.originalBlob = result.blob;
     },

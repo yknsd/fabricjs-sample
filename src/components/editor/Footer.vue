@@ -19,6 +19,7 @@ export default {
         {name: "filter", icon: "mdi-image-filter-black-white"},
         {name: "text", icon: "mdi-format-text"},
         {name: "drawing", icon: "mdi-lead-pencil"},
+        {name: "erase", icon: "mdi-eraser"}
       ]
     }
   },
