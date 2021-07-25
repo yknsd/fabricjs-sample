@@ -1,7 +1,7 @@
 <template>
   <v-card
-    v-if="canvasJson"
-    class="card-class"
+    v-if="!isEmpty"
+    class="json-card"
   >
     <v-card-title class="text-left">canvas.toJSON</v-card-title>
     <v-card-text class="text-left">
@@ -17,7 +17,19 @@ export default {
   computed: {
     ...mapGetters({
       canvasJson: "canvasJson"
-    })
+    }),
+    isEmpty(){
+      console.log("canvasJson:", this.canvasJson);
+      // eslint-disable-next-line no-prototype-builtins
+      return !this.canvasJson || !this.canvasJson.hasOwnProperty("objects");
+    }
   },
 }
 </script>
+
+<style scoped>
+.json-card {
+  width      : 100%;
+  min-height : 100px;
+}
+</style>

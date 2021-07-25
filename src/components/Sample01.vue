@@ -19,7 +19,7 @@
         :canvas-width="canvasWidth"
         :canvas-height="canvasHeight"
       />
-      <canvas-json-preview class="mt-5" />
+      <canvas-json-preview class="my-5" />
     </v-row>
   </v-col>
 </template>
