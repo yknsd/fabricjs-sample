@@ -25,12 +25,11 @@ const store = new Vuex.Store({
             state.selectedMenuIndex = index;
         },
         SET_CANVAS_JSON(state, json) {
-            json.objects = json.objects.map(function(value, index) {
+            json.objects = json.objects.map(function(value) {
                 // eslint-disable-next-line no-prototype-builtins
                 if(value.hasOwnProperty("src")){
                     value.src = "";
                 }
-                console.log("value:", value, "index:",index);
                 return value;
             });
             state.canvasJson = json;

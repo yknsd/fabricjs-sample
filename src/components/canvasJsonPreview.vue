@@ -6,7 +6,9 @@
   >
     <v-card-title class="text-left">canvas.toJSON</v-card-title>
     <v-card-text class="text-left json-text">
-      {{ colorizedJson }}
+      <pre>
+        <div v-html="colorizedJson" />
+      </pre>
     </v-card-text>
   </v-card>
 </template>
@@ -56,7 +58,8 @@ export default {
   width      : 100%;
   min-height : 100px;
 }
+
 .json-text {
-  color: chartreuse !important;
+  color : chartreuse !important;
 }
 </style>
