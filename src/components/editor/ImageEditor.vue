@@ -27,6 +27,7 @@
 <script>
 import {fabric} from "fabric";
 import Footer from "./Footer";
+import { mapGetters } from "vuex";
 
 const MAX_WIDTH = 800;
 const MAX_HEIGHT = 800;
@@ -53,11 +54,14 @@ export default {
       canvas: {
         type: Object
       },
-      menus: ["trim", "filter", "text", "drawing"],
-      selectedMenuIndex: 0,
       trimSquare: null,
       imgObj: null,
     };
+  },
+  computed: {
+    ...mapGetters([
+      "selectedMenuIndex"
+    ])
   },
   watch: {
     selectedMenuIndex(newIndex){
@@ -141,7 +145,7 @@ export default {
      */
     trimImage() {
       console.log("trim image:");
-      this.selectedMenuIndex = 0;
+      this.$store.commit("SET_SELECTED_MENU_INDEX", 0);
       let rect = new fabric.Rect({
         fill: 'transparent',
         originX: 'left',
@@ -166,7 +170,7 @@ export default {
      * Filter
      */
     filterImage() {
-      this.selectedMenuIndex = 1;
+      this.$store.commit("SET_SELECTED_MENU_INDEX", 1);
       let obj = this.canvas.getActiveObject();
       if (obj && obj.filters) {
         obj.filters.push(
@@ -180,7 +184,7 @@ export default {
      * Add text
      */
     addText() {
-      this.selectedMenuIndex = 2;
+      this.$store.commit("SET_SELECTED_MENU_INDEX", 2);
       const itext = new fabric.IText("hello world",
         {
           left: 100,
@@ -212,7 +216,7 @@ export default {
      * Drawing
      */
     drawing() {
-      this.selectedMenuIndex = 3;
+      this.$store.commit("SET_SELECTED_MENU_INDEX", 3);
       console.log("drawing");
       this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
       this.canvas.freeDrawingBrush.color = "#42A5F5";
