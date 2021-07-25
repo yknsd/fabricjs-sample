@@ -1,16 +1,17 @@
 
-This is sample app for [blueimp/Javascript-Load-Image](https://github.com/blueimp/JavaScript-Load-Image)
-
-I created it to help my understanding.
+This is sample app for [fabricjs](https://github.com/fabricjs/fabric.js)
 
 ## Function
 
-* Crop
-* Rotate
-* Show meta-data
+* Trim
+* Filter
+* Text
+* Free Drawing
+* Erase
 
 ## Version
 
+* fabric 4.5.1
 * blueimp-load-image 5.14.0
 * Vue 2.6.11
 
