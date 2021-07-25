@@ -70,6 +70,9 @@ export default {
         this.$set(this.canvas, "isDrawingMode", false);
       }
       this.canvas.sendToBack(this.imgObj);
+      const json = this.canvas.toJSON();
+      console.log("canvas.toJSON:",json);
+      this.$store.commit("SET_CANVAS_JSON", json);
     }
   },
   mounted() {
@@ -233,12 +236,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .card-class {
   width      : 100%;
   min-height : 400px;
 }
-
+</style>
+<style scoped>
 canvas {
   border : 1px solid;
 }

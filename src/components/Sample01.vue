@@ -19,6 +19,7 @@
         :canvas-width="canvasWidth"
         :canvas-height="canvasHeight"
       />
+      <canvas-json-preview class="mt-5" />
     </v-row>
   </v-col>
 </template>
@@ -26,6 +27,7 @@
 <script>
 import loadImage from 'blueimp-load-image';
 import ImageEditor from "./editor/ImageEditor";
+import CanvasJsonPreview from "./canvasJsonPreview";
 
 const MAX_WIDTH = 800;
 const MIN_WIDTH = 300;
@@ -33,7 +35,7 @@ const MAX_HEIGHT = 800;
 const MIN_HEIGHT = 300;
 
 export default {
-  components: {ImageEditor},
+  components: {CanvasJsonPreview, ImageEditor},
   data() {
     return {
       rules: [
