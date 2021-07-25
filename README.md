@@ -1,8 +1,6 @@
 
 This is sample app for [fabricjs](https://github.com/fabricjs/fabric.js)
 
-I created it to help my understanding.
-
 ## Function
 
 * Trim
