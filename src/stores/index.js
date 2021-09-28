@@ -2,12 +2,22 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 Vue.use(Vuex);
+export const fontItems = [
+    "TimesNewRoman",
+    "Comic Sans"
+];
 
 const store = new Vuex.Store({
     state: {
         menus: ["trim", "filter", "text", "drawing"],
         selectedMenuIndex: 0,
-        canvasJson: {}
+        canvasJson: {},
+        fontName: fontItems[0],
+        textSize: 20,
+        textWeight: 200,
+        underline: false,
+        lineThrough: false,
+        fontStyle: "normal"
     },
     getters: {
         selectedMenuIndex(state){
@@ -18,6 +28,27 @@ const store = new Vuex.Store({
         },
         canvasJson(state) {
             return state.canvasJson;
+        },
+        fontItems() {
+            return fontItems;
+        },
+        selectedFontName(state) {
+            return state.fontName;
+        },
+        textSize(state) {
+            return state.textSize;
+        },
+        textWeight(state) {
+            return state.textWeight;
+        },
+        underline(state) {
+            return state.underline;
+        },
+        lineThrough(state) {
+            return state.lineThrough;
+        },
+        fontStyle(state) {
+            return state.fontStyle;
         }
     },
     mutations: {
@@ -33,6 +64,24 @@ const store = new Vuex.Store({
                 return value;
             });
             state.canvasJson = json;
+        },
+        SET_FONT_INDEX(state, index) {
+            state.fontIndex = index;
+        },
+        SET_TEXT_SIZE(state, size) {
+            state.textSize = size;
+        },
+        SET_TEXT_WEIGHT(state, weight) {
+            state.textWeight = weight;
+        },
+        SET_UNDERLINE(state, isShow) {
+            state.underline = isShow;
+        },
+        SET_LINE_THROUGH(state, isShow) {
+            state.lineThrough = isShow;
+        },
+        SET_FONT_STYLE(state, style) {
+            state.fontStyle = style;
         }
     },
     actions: {}

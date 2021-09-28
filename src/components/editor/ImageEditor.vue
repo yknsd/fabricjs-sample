@@ -16,7 +16,7 @@
       <Footer
         @trim="trimImage"
         @filter="filterImage"
-        @text="addText"
+        @text="text"
         @drawing="drawing"
         @erase="erase"
       />
@@ -56,11 +56,19 @@ export default {
       },
       trimSquare: null,
       imgObj: null,
+      itext: null,
+      textBox: null
     };
   },
   computed: {
     ...mapGetters([
-      "selectedMenuIndex"
+      "selectedMenuIndex",
+      "selectedFontName",
+      "textSize",
+      "textWeight",
+      "underline",
+      "lineThrough",
+      "fontStyle"
     ])
   },
   watch: {
@@ -73,6 +81,42 @@ export default {
       const json = this.canvas.toJSON();
       console.log("canvas.toJSON:",json);
       this.$store.commit("SET_CANVAS_JSON", json);
+    },
+    selectedFontName(name) {
+      this.itext.set("fontFamily",name);
+      this.textBox.set("fontFamily",name);
+      this.itext.setCoords();
+      this.textBox.setCoords();
+    },
+    textSize(size){
+      this.itext.set("fontsSize",size);
+      this.textBox.set("fontSize",size);
+      this.itext.setCoords();
+      this.textBox.setCoords();
+    },
+    textWeight(weight) {
+      this.itext.set("fontWeight",weight);
+      this.textBox.set("fontWeight",weight);
+      this.itext.setCoords();
+      this.textBox.setCoords();
+    },
+    underline(isShow) {
+      this.itext.set("underline",isShow);
+      this.textBox.set("underline",isShow);
+      this.itext.setCoords();
+      this.textBox.setCoords();
+    },
+    lineThrough(isShow) {
+      this.itext.set("linethrough",isShow);
+      this.textBox.set("linethrough",isShow);
+      this.itext.setCoords();
+      this.textBox.setCoords();
+    },
+    fontStyle(style) {
+      this.itext.set("fontStyle",style);
+      this.textBox.set("fontStyle", style);
+      this.itext.setCoords();
+      this.textBox.setCoords();
     }
   },
   mounted() {
@@ -148,7 +192,6 @@ export default {
      */
     trimImage() {
       console.log("trim image:");
-      this.$store.commit("SET_SELECTED_MENU_INDEX", 0);
       let rect = new fabric.Rect({
         fill: 'transparent',
         originX: 'left',
@@ -173,7 +216,6 @@ export default {
      * Filter
      */
     filterImage() {
-      this.$store.commit("SET_SELECTED_MENU_INDEX", 1);
       let obj = this.canvas.getActiveObject();
       if (obj && obj.filters) {
         obj.filters.push(
@@ -187,39 +229,55 @@ export default {
      * Add text
      */
     addText() {
-      this.$store.commit("SET_SELECTED_MENU_INDEX", 2);
-      const itext = new fabric.IText("hello world",
+      const itext = new fabric.IText("Hello world",
         {
           left: 100,
           top: 100,
-          fontSize: 28,
           textAlign: 'center',
           charSpacing: 50,
           fill: '#26C6DA',
           strokeWidth: 2,
-          stroke: "#1DE9B6"
+          stroke: "#1DE9B6",
+          fontFamily: this.selectedFontName,
+          fontSize: this.textSize,
+          fontWeight: this.textWeight,
+          underline: this.underline,
+          linethrough: this.lineThrough
         }
       );
-      const textBox = new fabric.Textbox("Thi is a TextBox object",
+      this.itext = itext;
+      const textBox = new fabric.Textbox("TextBox",
         {
           left: 100,
-          top: 100,
-          fontSize: 28,
+          top: 200,
           textAlign: 'center',
           charSpacing: 50,
           fill: '#C6FF00',
           strokeWidth: 2,
-          stroke: "#FFCA28"
-      });
+          stroke: "#FFCA28",
+          fontFamily: this.selectedFontName,
+          fontSize: this.textSize,
+          fontWeight: this.textWeight,
+          underline: this.underline,
+          linethrough: this.lineThrough
+        });
+      this.textBox = textBox;
       this.canvas.add(itext, textBox);
       this.canvas.setActiveObject(itext);
       console.log("canvas:", this.canvas);
+    },
+    text() {
+      if (!this.itext) {
+        this.addText();
+      } else {
+        this.canvas.setActiveObject(this.itext);
+        this.canvas.setActiveObject(this.textBox);
+      }
     },
     /**
      * Drawing
      */
     drawing() {
-      this.$store.commit("SET_SELECTED_MENU_INDEX", 3);
       console.log("drawing");
       this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
       this.canvas.freeDrawingBrush.color = "#42A5F5";
