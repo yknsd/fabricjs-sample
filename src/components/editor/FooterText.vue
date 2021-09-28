@@ -68,11 +68,15 @@ export default {
     },
     setUnderLine() {
       this.addUnderLine = !this.addUnderLine;
+      this.addLineThrough = false;
       this.$store.commit("SET_UNDERLINE", this.addUnderLine);
+      this.$store.commit("SET_LINE_THROUGH", false);
       this.$store.commit("SET_FONT_STYLE", "normal");
     },
     setLineThrough() {
       this.addLineThrough = !this.addLineThrough;
+      this.addUnderLine = false;
+      this.$store.commit("SET_UNDERLINE", false);
       this.$store.commit("SET_LINE_THROUGH", this.addLineThrough);
       this.$store.commit("SET_FONT_STYLE", "normal");
     },
