@@ -1,26 +1,23 @@
 <template>
-  <div>
-    <v-btn-toggle>
+  <div style="max-width: 50px">
+    <v-btn-toggle borderless :value="currentIndex">
       <v-btn
         v-for="(value,index) in functions"
-        :key="`function-${index}`"
+        :key="index"
         @click="goTo(value.name, index)"
+        class="mt-1"
+        style="border-radius: 50%"
       >
         <v-icon>{{ value.icon }}</v-icon>
       </v-btn>
     </v-btn-toggle>
-    <FooterText v-show="currentIndex===2" />
   </div>
 </template>
 
 <script>
-import FooterText from "./FooterText";
 import { mapGetters } from "vuex";
 
 export default {
-  components: {
-    FooterText
-  },
   data() {
     return {
       functions: [
@@ -45,3 +42,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+>>> .v-btn-toggle {
+  display: inherit;
+}
+</style>

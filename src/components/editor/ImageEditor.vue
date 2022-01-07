@@ -3,23 +3,29 @@
     v-if="imgSrc"
     class="card-class"
   >
-    <v-card-title class="text-left">Image</v-card-title>
-    <v-card-text class="text-left">
+    <v-card-text class="text-center d-flex">
       <canvas
         id="img-pad"
         @mousedown="mouseDown"
         @mousemove="mouseMove"
         @mouseup="mouseUp"
-        :width="canvasWidth"
+        :width="canvasW"
         :height="canvasHeight"
       />
       <Footer
+        class="func-toggle"
+        :style="`left: ${canvasW - 50}px;top: 25px;`"
         @trim="trimImage"
         @filter="filterImage"
         @text="text"
         @drawing="drawing"
         @erase="erase"
       />
+      <FooterTrim v-if="selectedMenuIndex === 0" class="ma-auto sub-menu-div" />
+      <FooterFilter v-else-if="selectedMenuIndex===1" class="ma-auto sub-menu-div" />
+      <FooterText v-else-if="selectedMenuIndex===2" class="ma-auto sub-menu-div"/>
+      <FooterDrawing v-else-if="selectedMenuIndex === 3" class="ma-auto sub-menu-div" />
+      <FooterErase v-else-if="selectedMenuIndex === 4" class="ma-auto sub-menu-div" />
     </v-card-text>
   </v-card>
 </template>
@@ -27,14 +33,25 @@
 <script>
 import {fabric} from "fabric";
 import Footer from "./Footer";
+import FooterText from "./FooterText";
 import { mapGetters } from "vuex";
+import FooterDrawing from "./FooterDrawing";
+import FooterErase from "./FooterErase";
+import FooterFilter from "./FooterFilter";
+import FooterTrim from "./FooterTrim";
 
 const MAX_WIDTH = 800;
 const MAX_HEIGHT = 800;
+const CANVAS_PADDING = 100;
 
 export default {
   components: {
-    Footer
+    FooterTrim,
+    FooterFilter,
+    FooterErase,
+    Footer,
+    FooterText,
+    FooterDrawing
   },
   props: {
     imgSrc: {
@@ -68,19 +85,35 @@ export default {
       "textWeight",
       "underline",
       "lineThrough",
-      "fontStyle"
-    ])
+      "fontStyle",
+      "drawingColor",
+      "drawingWidth"
+    ]),
+    canvasW() {
+      return this.$props.canvasWidth < 400 ? 400 : this.$props.canvasWidth;
+    }
   },
   watch: {
-    selectedMenuIndex(newIndex){
-      console.log("selectedMenuIndex");
-      if(newIndex !== 3){
+    selectedMenuIndex(newIndex, oldIndex){
+      console.log("selectedMenuIndex:", oldIndex, "->", newIndex);
+      if (newIndex !== 3) {
         this.$set(this.canvas, "isDrawingMode", false);
+      } else {
+        this.$set(this.canvas, "isDrawingMode", true);
       }
-      this.canvas.sendToBack(this.imgObj);
+      const image = this.canvas.item(0);
+      this.canvas.sendToBack(image);
       const json = this.canvas.toJSON();
       console.log("canvas.toJSON:",json);
       this.$store.commit("SET_CANVAS_JSON", json);
+      if (newIndex === 0) {
+        // image.set({
+        //   evented: true,
+        //   selectable: true
+        // });
+        this.canvas.setActiveObject(image);
+      }
+      this.canvas.requestRenderAll();
     },
     selectedFontName(name) {
       this.itext.set("fontFamily",name);
@@ -123,32 +156,37 @@ export default {
     const canvas = new fabric.Canvas('img-pad');
     const width = this.canvasWidth;
     const height = this.canvasHeight;
-    let img;
+    // let img;
     if (this.imgSrc) {
       fabric.Image.fromURL(this.imgSrc, function (objImg) {
         console.log("mounted: objImg, ", objImg);
+        const scale = width < height ? height / (MAX_HEIGHT + CANVAS_PADDING) : width / (MAX_WIDTH + CANVAS_PADDING);
         objImg.set({
           cornerStrokeColor: "rgb(110,110,125)",
-          scaleX: width / MAX_WIDTH,
-          scaleY: height / MAX_HEIGHT,
+          scaleX: scale,
+          scaleY: scale,
           selectable: true
         });
         objImg.setControlsVisibility({
           mt: false,
           mb: false,
           ml: false,
-          mr: false
+          mr: false,
+          mtr: false
         });
-        img = objImg;
+        // img = objImg;
         // canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
         canvas.add(objImg);
+        canvas.centerObject(objImg);
         canvas.setActiveObject(objImg);
+        canvas.renderAll();
       });
-      this.imgObj = img;
-      console.log("imgObj:", this.imgObj);
+      // this.imgObj = img;
+      // console.log("imgObj:", this.imgObj);
     }
     this.$set(this, "canvas", canvas);
     console.log("canvas:", this.canvas);
+    this.$store.commit("SET_SELECTED_MENU_INDEX", 0);
   },
   methods: {
     /**
@@ -175,12 +213,13 @@ export default {
     mouseUp(event) {
       console.log("mouse up:", event);
       if (this.selectedMenuIndex === 0) {
-        let left = this.trimSquare.left - this.imgObj.left * (1/0.25);
-        let top = this.trimSquare.top - this.imgObj.top * (1/0.25);
-        let width = this.trimSquare.width * 1/0.25;
-        let height = this.trimSquare.height * 1/0.25;
+        const image = this.canvas.item(0);
+        const left = this.trimSquare.left - image.left * (1/0.25);
+        const top = this.trimSquare.top - image.top * (1/0.25);
+        const width = this.trimSquare.width * 1/0.25;
+        const height = this.trimSquare.height * 1/0.25;
 
-        this.imgObj.clipTo = function (ctx) {
+        image.clipTo = function (ctx) {
           ctx.rect(left, top, width, height);
         };
         this.trimSquare.visible = false;
@@ -280,8 +319,8 @@ export default {
     drawing() {
       console.log("drawing");
       this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
-      this.canvas.freeDrawingBrush.color = "#42A5F5";
-      this.canvas.freeDrawingBrush.width = 10;
+      this.canvas.freeDrawingBrush.color = this.drawingColor;
+      this.canvas.freeDrawingBrush.width = this.drawingWidth;
       this.canvas.isDrawingMode = true;
     },
     /**
@@ -298,6 +337,16 @@ export default {
 .card-class {
   width      : 100%;
   min-height : 400px;
+}
+.func-toggle {
+  position: absolute;
+}
+.sub-menu-div {
+  max-width        : 250px;
+  max-height       : 280px;
+  background-color : rgba(239, 239, 239, 0.7);
+  border-radius    : 15px;
+  padding          : 20px;
 }
 canvas {
   border : 1px solid;

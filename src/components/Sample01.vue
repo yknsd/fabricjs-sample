@@ -1,25 +1,20 @@
 <template>
   <v-col cols="10">
-    <ValidationProvider rules="required|size:2000000|image" v-slot="{ errors }">
-      <v-file-input
-        show-size
-        label="File input"
-        accept="image/png, image/jpeg"
-        :rules="rules"
-        :error="0 < errors.length"
-        :error-messages="errors[0]"
-        @change="loadImageFunction"
-        @click:clear="clear"
-      ></v-file-input>
-    </ValidationProvider>
-
+    <v-btn color="primary" @click="$refs.InputImage.click()">Select image</v-btn>
+    <p v-if="warnMsg" class="red--text caption">{{ warnMsg }}</p>
+    <input
+      ref="InputImage"
+      type="file"
+      accept="image/png, image/jpeg"
+      @change="loadImageFunction"
+      hidden
+    />
     <v-row v-if="imgSrc" class="mt-10">
       <ImageEditor
         :img-src="imgSrc"
         :canvas-width="canvasWidth"
         :canvas-height="canvasHeight"
       />
-      <canvas-json-preview class="my-5" />
     </v-row>
   </v-col>
 </template>
@@ -27,7 +22,6 @@
 <script>
 import loadImage from 'blueimp-load-image';
 import ImageEditor from "./editor/ImageEditor";
-import CanvasJsonPreview from "./canvasJsonPreview";
 
 const MAX_WIDTH = 800;
 const MIN_WIDTH = 300;
@@ -35,7 +29,9 @@ const MAX_HEIGHT = 800;
 const MIN_HEIGHT = 300;
 
 export default {
-  components: {CanvasJsonPreview, ImageEditor},
+  components: {
+    ImageEditor
+  },
   data() {
     return {
       rules: [
@@ -45,21 +41,38 @@ export default {
       canvasWidth: MAX_WIDTH,
       canvasHeight: MAX_HEIGHT,
       originalBlob: null,
-      errorMessages: [],
+      warnMsg: undefined,
     };
   },
   computed: {
-    isError() {
-      return 0 < this.errorMessages;
-    },
+    // isError() {
+    //   return 0 < this.errorMessages;
+    // },
+  },
+  beforeDestroy() {
+    this.clear();
   },
   methods: {
     /**
      * Load image
-     * @param file
+     * @param event
      */
-    async loadImageFunction(file) {
-      if (!file) {
+    async loadImageFunction(event) {
+      console.log("loadImage:", event);
+      if (!event) {
+        console.log("no event");
+        this.warnMsg = "Invalid event";
+        return;
+      }
+      if(!event.target.files || 1 < event.target.files.length) {
+        console.log("invalid files");
+        this.warnMsg = "Invalid files";
+        return;
+      }
+      const file = event.target.files[0];
+      if (1e6 < file.size) {
+        console.log("size over:", file.size);
+        this.warnMsg = "Size over 1M";
         return;
       }
       const options = {
@@ -94,11 +107,8 @@ export default {
         URL.revokeObjectURL(this.imgSrc);
       }
       this.imgSrc = null;
-      this.$set(this, "errorMessages", []);
+      this.warnMsg = undefined;
     },
-  },
-  beforeDestroy() {
-    this.clear();
   }
 }
 </script>

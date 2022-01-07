@@ -1,5 +1,10 @@
 <template>
   <div>
+    <v-btn-toggle class="mb-3" dense dark multiple background-color="rgba(1,1,1,0)">
+      <v-btn small @click="setUnderLine"><v-icon small>{{ icons[0]}}</v-icon></v-btn>
+      <v-btn small @click="setLineThrough"><v-icon small>{{ icons[1]}}</v-icon></v-btn>
+      <v-btn small @click="setStyle"><v-icon small>{{ icons[2]}}</v-icon></v-btn>
+    </v-btn-toggle>
     <v-select
       v-model="font"
       :items="fontItems"
@@ -24,11 +29,6 @@
       required
       @change="setSize"
     ></v-select>
-    <v-btn-toggle>
-      <v-btn @click="setUnderLine"><v-icon>{{ icons[0]}}</v-icon></v-btn>
-      <v-btn @click="setLineThrough"><v-icon>{{ icons[1]}}</v-icon></v-btn>
-      <v-btn @click="setStyle"><v-icon>{{ icons[2]}}</v-icon></v-btn>
-    </v-btn-toggle>
   </div>
 </template>
 
@@ -86,3 +86,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.sub-menu-div {
+  max-width        : 250px;
+  max-height       : 280px;
+  background-color : rgba(239, 239, 239, 0.7);
+  border-radius    : 15px;
+  padding          : 20px;
+}
+</style>

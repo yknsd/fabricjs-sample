@@ -17,7 +17,9 @@ const store = new Vuex.Store({
         textWeight: 200,
         underline: false,
         lineThrough: false,
-        fontStyle: "normal"
+        fontStyle: "normal",
+        drawingColor: "#42A5F5",
+        drawingWidth: 10
     },
     getters: {
         selectedMenuIndex(state){
@@ -49,6 +51,12 @@ const store = new Vuex.Store({
         },
         fontStyle(state) {
             return state.fontStyle;
+        },
+        drawingColor(state) {
+            return state.drawingColor;
+        },
+        drawingWidth(state) {
+            return state.drawingWidth;
         }
     },
     mutations: {
@@ -82,6 +90,12 @@ const store = new Vuex.Store({
         },
         SET_FONT_STYLE(state, style) {
             state.fontStyle = style;
+        },
+        SET_DRAWING_COLOR(state, code) {
+            state.drawingColor = code;
+        },
+        SET_DRAWING_WIDTH(state, width) {
+            state.drawingWidth = width;
         }
     },
     actions: {}
