@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import {fabric} from "fabric";
 
 Vue.use(Vuex);
 export const fontItems = [
@@ -13,13 +14,44 @@ const store = new Vuex.Store({
         selectedMenuIndex: 0,
         canvasJson: {},
         fontName: fontItems[0],
+        colorRgba: "#b8ea08",
         textSize: 20,
         textWeight: 200,
         underline: false,
         lineThrough: false,
         fontStyle: "normal",
         drawingColor: "#42A5F5",
-        drawingWidth: 10
+        drawingWidth: 10,
+        filters: [
+            {
+                name: "Normal"
+            },
+            {
+                name: "Sepia",
+                func: function() { return new fabric.Image.filters.Sepia(); }
+            },
+            {
+                name: "Grayscale",
+                func: function() { return new fabric.Image.filters.Grayscale(); }
+            },
+            {
+                name: "Invert",
+                func: function() { return new fabric.Image.filters.Invert(); }
+            },
+            {
+                name: "Noise",
+                func: function() {
+                    return new fabric.Image.filters.Noise({ noise: 700 });
+                }
+            },
+            {
+                name: "Pixelate",
+                func: function() {
+                    return new fabric.Image.filters.Pixelate({ blocksize: 7 });
+                }
+            }
+        ],
+        selectedFilterIndex: 0
     },
     getters: {
         selectedMenuIndex(state){
@@ -36,6 +68,9 @@ const store = new Vuex.Store({
         },
         selectedFontName(state) {
             return state.fontName;
+        },
+        colorRgba(state) {
+            return state.colorRgba;
         },
         textSize(state) {
             return state.textSize;
@@ -57,6 +92,12 @@ const store = new Vuex.Store({
         },
         drawingWidth(state) {
             return state.drawingWidth;
+        },
+        filters(state) {
+            return state.filters;
+        },
+        selectedFilterIndex(state) {
+            return state.selectedFilterIndex;
         }
     },
     mutations: {
@@ -75,6 +116,9 @@ const store = new Vuex.Store({
         },
         SET_FONT_INDEX(state, index) {
             state.fontIndex = index;
+        },
+        SET_COLOR_RGBA(state, color) {
+            state.colorRgba = color;
         },
         SET_TEXT_SIZE(state, size) {
             state.textSize = size;
@@ -96,6 +140,9 @@ const store = new Vuex.Store({
         },
         SET_DRAWING_WIDTH(state, width) {
             state.drawingWidth = width;
+        },
+        SET_SELECTED_FILTER(state, index) {
+            state.selectedFilterIndex = index;
         }
     },
     actions: {}

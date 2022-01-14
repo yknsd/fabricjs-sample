@@ -1,39 +1,41 @@
 <template>
-  <div>
-    <v-select
-      v-model="width"
-      :items="widthItems"
-      :rules="[v => !!v || 'Item is required']"
-      label="Width"
-      required
-      @change="setWidth"
-    ></v-select>
+  <div style="max-height: 300px">
+    <v-btn-toggle :value="selectedIndex" borderless background-color="rgba(1,1,1,0)" tile>
+      <v-btn
+        v-for="(filter, index) in filters"
+        :key="index"
+        @click="setFilter(index)"
+        class="ma-1"
+        width="80"
+        height="80"
+      >
+        <p class="caption mb-0" style="font-size: 0.5rem">{{ filter.name }}</p>
+      </v-btn>
+    </v-btn-toggle>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "FooterFilter",
-  components: {},
-  data() {
-    return {
-      color: "#42A5F5",
-      width: 10,
-      widthItems: [ "10", "20", "30", "40", "50"]
-    }
-  },
   computed: {
     ...mapGetters({
-      drawingColor: "drawingColor",
-      drawingWidth: "drawingWidth"
+      filters: "filters",
+      selectedIndex: "selectedFilterIndex"
     })
   },
   methods: {
-    setWidth(val) {
-      this.$store.commit("SET_DRAWING_WIDTH", val);
-    }
+    ...mapMutations({
+      setFilter: "SET_SELECTED_FILTER"
+    })
   }
 }
 </script>
+
+<style scoped>
+>>> .v-btn-toggle {
+  display: inherit;
+}
+</style>
