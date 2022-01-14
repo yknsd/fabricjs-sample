@@ -375,6 +375,8 @@ export default {
           underline: this.underline,
           linethrough: this.lineThrough,
           width: 100,
+          selectable: true,
+          evented: true,
         });
       this.canvas.add(textBox);
       this.canvas.setActiveObject(textBox);

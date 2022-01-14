@@ -26,16 +26,16 @@
       @change="setFont"
       class="body-2"
     ></v-select>
-    <v-select
-      v-model="size"
-      :items="sizeItems"
-      :rules="[v => !!v || 'Item is required']"
-      label="Size"
-      required
-      dense
-      class="body-2"
-      @change="setSize"
-    ></v-select>
+<!--    <v-select-->
+<!--      v-model="size"-->
+<!--      :items="sizeItems"-->
+<!--      :rules="[v => !!v || 'Item is required']"-->
+<!--      label="Size"-->
+<!--      required-->
+<!--      dense-->
+<!--      class="body-2"-->
+<!--      @change="setSize"-->
+<!--    ></v-select>-->
   </div>
 </template>
 
