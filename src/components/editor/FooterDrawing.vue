@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%">
     <v-color-picker
       dot-size="38"
       hide-canvas
@@ -19,7 +19,7 @@
       required
       dense
       @change="setWidth"
-      class="body-2"
+      class="body-2 px-4"
     ></v-select>
   </div>
 </template>
@@ -53,3 +53,6 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+</style>

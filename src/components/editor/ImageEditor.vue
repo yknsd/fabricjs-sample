@@ -17,11 +17,11 @@
         @drawing="drawing"
         @erase="erase"
       />
-      <FooterTrim v-if="selectedMenuIndex === 0" class="ma-auto sub-menu-div"/>
-      <FooterFilter v-else-if="selectedMenuIndex===1" class="ma-auto sub-menu-div"/>
-      <FooterText v-else-if="selectedMenuIndex===2" class="ma-auto sub-menu-div"/>
-      <FooterDrawing v-else-if="selectedMenuIndex === 3" class="ma-auto sub-menu-div"/>
-      <FooterErase v-else-if="selectedMenuIndex === 4" class="ma-auto sub-menu-div"/>
+<!--      <FooterTrim v-if="selectedMenuIndex === 0" class="ma-auto sub-menu-div pa-1"/>-->
+      <FooterFilter v-if="selectedMenuIndex===1" class="ma-auto sub-menu-div pa-1"/>
+      <FooterText v-else-if="selectedMenuIndex===2" class="ma-auto sub-menu-div pa-1"/>
+      <FooterDrawing v-else-if="selectedMenuIndex === 3" class="ma-auto sub-menu-div pa-1"/>
+      <FooterErase v-else-if="selectedMenuIndex === 4" class="ma-auto sub-menu-div pa-1"/>
     </v-card-text>
   </v-card>
 </template>
@@ -34,7 +34,7 @@ import {mapGetters} from "vuex";
 import FooterDrawing from "./FooterDrawing";
 import FooterErase from "./FooterErase";
 import FooterFilter from "./FooterFilter";
-import FooterTrim from "./FooterTrim";
+// import FooterTrim from "./FooterTrim";
 
 const MAX_WIDTH = 800;
 const MAX_HEIGHT = 800;
@@ -42,7 +42,7 @@ const CANVAS_PADDING = 100;
 
 export default {
   components: {
-    FooterTrim,
+    // FooterTrim,
     FooterFilter,
     FooterErase,
     Footer,
@@ -416,7 +416,7 @@ export default {
   max-height       : 280px;
   background-color : rgba(239, 239, 239, 0.7);
   border-radius    : 15px;
-  padding          : 20px;
+  /*padding          : 20px;*/
 }
 
 canvas {

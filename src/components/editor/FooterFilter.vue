@@ -1,5 +1,5 @@
 <template>
-  <div style="max-height: 300px">
+  <div style="max-height: 300px; width: 100%" class="py-3">
     <v-btn-toggle :value="selectedIndex" borderless background-color="rgba(1,1,1,0)" tile>
       <v-btn
         v-for="(filter, index) in filters"

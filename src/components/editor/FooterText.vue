@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%">
     <v-color-picker
       dot-size="38"
       hide-canvas
@@ -24,7 +24,7 @@
       label="Font"
       required
       @change="setFont"
-      class="body-2"
+      class="body-2 px-4"
     ></v-select>
 <!--    <v-select-->
 <!--      v-model="size"-->
@@ -99,11 +99,4 @@ export default {
 </script>
 
 <style scoped>
-.sub-menu-div {
-  max-width        : 250px;
-  max-height       : 280px;
-  background-color : rgba(239, 239, 239, 0.7);
-  border-radius    : 15px;
-  padding          : 20px;
-}
 </style>

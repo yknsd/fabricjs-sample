@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%">
     <v-select
       v-model="width"
       :items="widthItems"
@@ -7,6 +7,7 @@
       label="Width"
       required
       @change="setWidth"
+      class="body-2 px-4"
     ></v-select>
   </div>
 </template>
