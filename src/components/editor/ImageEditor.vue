@@ -5,7 +5,7 @@
   >
     <v-card-text class="text-center d-flex">
       <canvas
-        id="img-pad"
+        id="canvasEl"
         :width="canvasW"
         :height="canvasHeight"
       />
@@ -17,12 +17,14 @@
         @drawing="drawing"
         @erase="erase"
         @trash="trash"
+        @export="exportCanvas"
       />
 <!--      <FooterTrim v-if="selectedMenuIndex === 0" class="ma-auto sub-menu-div pa-1"/>-->
       <FooterFilter v-if="selectedMenuIndex===1" class="ma-auto sub-menu-div pa-1"/>
       <FooterText v-else-if="selectedMenuIndex===2" class="ma-auto sub-menu-div pa-1"/>
       <FooterDrawing v-else-if="selectedMenuIndex === 3" class="ma-auto sub-menu-div pa-1"/>
       <FooterErase v-else-if="selectedMenuIndex === 4" class="ma-auto sub-menu-div pa-1"/>
+      <FooterExport v-else-if="selectedMenuIndex === 6" class="ma-auto sub-menu-div pa-1" />
     </v-card-text>
   </v-card>
 </template>
@@ -35,6 +37,7 @@ import {mapGetters} from "vuex";
 import FooterDrawing from "./FooterDrawing";
 import FooterErase from "./FooterErase";
 import FooterFilter from "./FooterFilter";
+import FooterExport from "./FooterExport";
 // import FooterTrim from "./FooterTrim";
 
 const MAX_WIDTH = 800;
@@ -43,6 +46,7 @@ const CANVAS_PADDING = 100;
 
 export default {
   components: {
+    FooterExport,
     // FooterTrim,
     FooterFilter,
     FooterErase,
@@ -101,7 +105,9 @@ export default {
     }
   },
   async mounted() {
-    const canvas = new fabric.Canvas('img-pad');
+    const canvas = new fabric.Canvas('canvasEl');
+    const canvasEl = document.getElementById("canvasEl");
+    canvasEl.fabric = canvas;
     const width = this.canvasW;
     const height = this.$props.canvasHeight;
     if (this.imgSrc) {
@@ -437,6 +443,10 @@ export default {
       if (obj && 2 < this.canvas.size()) {
         this.canvas.remove(obj);
       }
+    },
+    exportCanvas() {
+      console.log("export canvas");
+
     }
   }
 }

@@ -101,6 +101,9 @@ export default {
       this.canvasHeight = result.originalHeight < MAX_HEIGHT ? (result.originalHeight < MIN_HEIGHT ? MIN_HEIGHT : result.originalHeight) : MAX_HEIGHT;
       this.imgSrc = result.url;
       this.originalBlob = result.blob;
+      const indexOfP = file.name.indexOf(".");
+      const filename = indexOfP !== -1 ? file.name.substring(0, indexOfP) : file.name;
+      this.$store.commit("SET_FILENAME", filename);
     },
     clear() {
       if (this.imgSrc) {

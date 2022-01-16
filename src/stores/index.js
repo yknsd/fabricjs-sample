@@ -13,6 +13,7 @@ export const fontFamilies = [
 
 const store = new Vuex.Store({
     state: {
+        filename: "",
         menus: ["trim", "filter", "text", "drawing", "erase", "trash"],
         selectedMenuIndex: 0,
         canvasJson: {},
@@ -58,6 +59,9 @@ const store = new Vuex.Store({
         selectedFilterIndex: 0
     },
     getters: {
+        filename(state) {
+            return state.filename;
+        },
         selectedMenuIndex(state){
             return state.selectedMenuIndex;
         },
@@ -108,6 +112,9 @@ const store = new Vuex.Store({
         }
     },
     mutations: {
+        SET_FILENAME(state, name) {
+            state.filename = name;
+        },
         SET_SELECTED_MENU_INDEX(state, index){
             state.selectedMenuIndex = index;
         },
