@@ -31,8 +31,8 @@ export default {
   components: {},
   data() {
     return {
-      color: "#42A5F5",
-      width: 10,
+      // color: "#42A5F5",
+      // width: 10,
       widthItems: [ "2", "5", "10", "20", "50"]
     }
   },

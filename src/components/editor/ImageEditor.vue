@@ -16,6 +16,7 @@
         @filter="filterImage"
         @drawing="drawing"
         @erase="erase"
+        @trash="trash"
       />
 <!--      <FooterTrim v-if="selectedMenuIndex === 0" class="ma-auto sub-menu-div pa-1"/>-->
       <FooterFilter v-if="selectedMenuIndex===1" class="ma-auto sub-menu-div pa-1"/>
@@ -69,20 +70,21 @@ export default {
       },
       mouseDownX: 0,
       mouseDownY: 0,
-      imgObj: null,
-      textBox: null
+      imgObj: undefined,
+      textBox: undefined
     };
   },
   computed: {
     ...mapGetters([
       "selectedMenuIndex",
-      "selectedFontName",
+      "fontFamily",
       "colorRgba",
       "textSize",
       "textWeight",
       "underline",
       "lineThrough",
       "fontStyle",
+      "fontAlign",
       "drawingColor",
       "drawingWidth",
       "selectedFilterIndex",
@@ -111,8 +113,8 @@ export default {
             cornerStrokeColor: "rgb(110,110,125)",
             scaleX: scale,
             scaleY: scale,
-            selectable: false,
-            evented: false,
+            selectable: true,
+            evented: true,
             originX: "center",
             originY: "center"
           });
@@ -146,7 +148,7 @@ export default {
             selectable: true,
             evented: true,
             inverted: true,
-            dirty: true
+            // dirty: true
           });
           // const group = new fabric.Group([ objImg, backGreyOut], {
           //   selectable: false,
@@ -194,7 +196,7 @@ export default {
       }
       this.canvas.requestRenderAll();
     },
-    selectedFontName(name) {
+    fontFamily(name) {
       const textBox = this.canvas.getActiveObject();
       if (textBox) {
         textBox.set("fontFamily", name);
@@ -250,6 +252,14 @@ export default {
         this.canvas.requestRenderAll();
       }
     },
+    fontAlign(align) {
+      const textBox = this.canvas.getActiveObject();
+      if (textBox) {
+        textBox.set("textAlign", align);
+        textBox.setCoords();
+        this.canvas.requestRenderAll();
+      }
+    },
     selectedFilterIndex(newInd) {
       console.log("watch.selectedFilterIndex:", newInd);
       const img = this.fabricImage;
@@ -265,7 +275,7 @@ export default {
       img.applyFilters();
       this.canvas.requestRenderAll();
     },
-    drawingWeight(val) {
+    drawingWidth(val) {
       if (this.canvas.freeDrawingBrush) {
         this.$set(this.canvas.freeDrawingBrush, "width", val);
         this.canvas.requestRenderAll();
@@ -283,13 +293,25 @@ export default {
      */
     mouseDown(event) {
       console.log("mouse down:", event);
-      console.log("before clipPath:", this.fabricTrimRect.clipPath);
       this.mouseDownX = event.pointer.x;
       this.mouseDownY = event.pointer.y;
       const activeObj = this.canvas.getActiveObject();
       console.log("activeObj:", activeObj);
-      if (this.selectedMenuIndex === 2 && !activeObj) {
-        this.addText();
+      console.log("menuIndex:", this.selectedMenuIndex);
+      if (this.selectedMenuIndex === 2) {
+        console.log("textBox:", this.textBox);
+        if (this.textBox) {
+          console.log("Exit Edit Mode");
+            this.textBox.exitEditing();
+            this.$set(this, "textBox", undefined);
+        } else if (!activeObj) {
+          console.log("Click and Add Textbox!");
+          this.addText();
+        }
+        // else if (activeObj.text !== "") {
+        //   console.log("Focus out Textbox");
+        //   this.canvas.discardActiveObject();
+        // }
       }
     },
     /**
@@ -303,6 +325,7 @@ export default {
      */
     mouseUp(event) {
       console.log("mouse up:", event);
+      console.log("menuIndex:", this.selectedMenuIndex);
       const pointer = event.pointer;
       if (this.selectedMenuIndex === 0) {
         this.fabricTrimRect.clipPath.set({
@@ -369,26 +392,36 @@ export default {
           textAlign: 'center',
           charSpacing: 50,
           fill: this.colorRgba,
-          fontFamily: this.selectedFontName,
+          fontFamily: this.fontFamily,
           fontSize: this.textSize,
           fontWeight: this.textWeight,
           underline: this.underline,
           linethrough: this.lineThrough,
           width: 100,
           selectable: true,
-          evented: true,
+          evented: true
         });
       this.canvas.add(textBox);
       this.canvas.setActiveObject(textBox);
+      textBox.enterEditing();
+      console.log("hiddenTextarea:",textBox.hiddenTextarea);
+      textBox.hiddenTextarea.focus();
+      textBox.setControlsVisibility({
+        mb: false,
+        ml: false,
+        mr: false,
+        mt: false
+      });
+      this.$set(this, "textBox", textBox);
+      // textBox.onKeyDown();
     },
     /**
      * Drawing
      */
     drawing() {
-      console.log("drawing");
       this.canvas.freeDrawingBrush = new fabric.PencilBrush(this.canvas);
-      this.canvas.freeDrawingBrush.color = this.drawingColor;
-      this.canvas.freeDrawingBrush.width = this.drawingWidth;
+      this.$set(this.canvas.freeDrawingBrush, "color", this.drawingColor);
+      this.$set(this.canvas.freeDrawingBrush, "width", this.drawingWidth);
       this.canvas.isDrawingMode = true;
     },
     /**
@@ -396,6 +429,14 @@ export default {
      */
     erase() {
       console.log("erase");
+    },
+    trash() {
+      const obj = this.canvas.getActiveObject();
+      console.log("active object:", obj);
+      console.log("size:", this.canvas.size());
+      if (obj && 2 < this.canvas.size()) {
+        this.canvas.remove(obj);
+      }
     }
   }
 }

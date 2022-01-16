@@ -3,23 +3,27 @@ import Vuex from 'vuex';
 import {fabric} from "fabric";
 
 Vue.use(Vuex);
-export const fontItems = [
+export const fontFamilies = [
     "TimesNewRoman",
-    "Comic Sans"
+    "Comic Sans",
+    "Delicious",
+    "Hoefler Text",
+
 ];
 
 const store = new Vuex.Store({
     state: {
-        menus: ["trim", "filter", "text", "drawing"],
+        menus: ["trim", "filter", "text", "drawing", "erase", "trash"],
         selectedMenuIndex: 0,
         canvasJson: {},
-        fontName: fontItems[0],
+        fontFamily: fontFamilies[0],
         colorRgba: "#b8ea08",
         textSize: 20,
         textWeight: 200,
         underline: false,
         lineThrough: false,
         fontStyle: "normal",
+        fontAlign: "center",
         drawingColor: "#42A5F5",
         drawingWidth: 10,
         filters: [
@@ -63,11 +67,11 @@ const store = new Vuex.Store({
         canvasJson(state) {
             return state.canvasJson;
         },
-        fontItems() {
-            return fontItems;
+        fontFamilyList() {
+            return fontFamilies;
         },
-        selectedFontName(state) {
-            return state.fontName;
+        fontFamily(state) {
+            return state.fontFamily;
         },
         colorRgba(state) {
             return state.colorRgba;
@@ -86,6 +90,9 @@ const store = new Vuex.Store({
         },
         fontStyle(state) {
             return state.fontStyle;
+        },
+        fontAlign(state) {
+            return state.fontAlign;
         },
         drawingColor(state) {
             return state.drawingColor;
@@ -114,8 +121,8 @@ const store = new Vuex.Store({
             });
             state.canvasJson = json;
         },
-        SET_FONT_INDEX(state, index) {
-            state.fontIndex = index;
+        SET_FONT_FAMILY(state, name) {
+            state.fontFamily = fontFamilies.includes(name) ? name : fontFamilies[0];
         },
         SET_COLOR_RGBA(state, color) {
             state.colorRgba = color;
@@ -134,6 +141,9 @@ const store = new Vuex.Store({
         },
         SET_FONT_STYLE(state, style) {
             state.fontStyle = style;
+        },
+        SET_FONT_ALIGN(state, align) {
+            state.fontAlign = align;
         },
         SET_DRAWING_COLOR(state, code) {
             state.drawingColor = code;

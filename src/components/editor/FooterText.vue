@@ -17,13 +17,23 @@
       <v-btn small @click="setLineThrough"><v-icon small>{{ icons[2]}}</v-icon></v-btn>
       <v-btn small @click="setStyle"><v-icon small>{{ icons[3]}}</v-icon></v-btn>
     </v-btn-toggle>
+    <v-btn-toggle class="mb-3" dense dark background-color="rgba(1,1,1,0)" :value="alignIndex">
+      <v-btn
+        v-for="(val, index) in alignIcons"
+        :key="index"
+        small
+        @click="setAlign(index)"
+      >
+        <v-icon small>{{ val }}</v-icon>
+      </v-btn>
+    </v-btn-toggle>
     <v-select
-      v-model="font"
-      :items="fontItems"
+      :value="fontFamily"
+      :items="fontFamilyList"
       :rules="[v => !!v || 'Item is required']"
       label="Font"
       required
-      @change="setFont"
+      @change="setFontFamily"
       class="body-2 px-4"
     ></v-select>
 <!--    <v-select-->
@@ -53,24 +63,37 @@ export default {
       weight: "200",
       weightItems: ["100", "200", "400", "600", "800"],
       icons: ["mdi-format-bold", "mdi-format-underline", "mdi-format-strikethrough", "mdi-format-italic"],
+      alignIcons: ["mdi-format-align-right", "mdi-format-align-center", "mdi-format-align-left"],
       addUnderLine: false,
       addLineThrough: false
     }
   },
   computed: {
     ...mapGetters({
-      fontItems: "fontItems",
+      fontFamilyList: "fontFamilyList",
+      fontFamily:"fontFamily",
       underline: "underline",
       lineThrough: "lineThrough",
       fontStyle: "fontStyle",
       colorRgba: "colorRgba",
-      fontWeight: "textWeight"
+      fontWeight: "textWeight",
+      fontAlign: "fontAlign"
     }),
+    alignIndex() {
+      switch (this.fontAlign) {
+        case "center":
+          return 1;
+        case "right":
+          return 0;
+        default:
+          return 2;
+      }
+    }
   },
   methods: {
-    setFont(name) {
+    setFontFamily(name) {
       console.log("name:", name);
-      this.$store.commit("SET_FONT_INDEX", name);
+      this.$store.commit("SET_FONT_FAMILY", name);
     },
     setColor(code) {
       console.log("setColor:", code);
@@ -93,6 +116,10 @@ export default {
     setStyle() {
       const style = this.fontStyle === "normal" ? "italic" : "normal";
       this.$store.commit("SET_FONT_STYLE", style);
+    },
+    setAlign(index) {
+      const val = index === 0 ? "right" : index === 2 ? "left" : "center";
+      this.$store.commit("SET_FONT_ALIGN", val);
     }
   }
 }

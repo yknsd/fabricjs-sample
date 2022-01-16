@@ -1,11 +1,12 @@
 <template>
   <div style="width: 100%">
     <v-select
-      v-model="width"
+      :value="drawingWidth"
       :items="widthItems"
       :rules="[v => !!v || 'Item is required']"
       label="Width"
       required
+      dense
       @change="setWidth"
       class="body-2 px-4"
     ></v-select>
@@ -20,9 +21,9 @@ export default {
   components: {},
   data() {
     return {
-      color: "#42A5F5",
-      width: 10,
-      widthItems: [ "10", "20", "30", "40", "50"]
+      // color: "#42A5F5",
+      // width: 10,
+      widthItems: [ "2", "5", "10", "20", "50"]
     }
   },
   computed: {
