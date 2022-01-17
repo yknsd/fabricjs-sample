@@ -22,13 +22,13 @@ export default {
   name: "FooterFilter",
   computed: {
     ...mapGetters({
-      filters: "filters",
-      selectedIndex: "selectedFilterIndex"
+      filters: "wFilter/filters",
+      selectedIndex: "wFilter/selectedFilterIndex"
     })
   },
   methods: {
     ...mapMutations({
-      setFilter: "SET_SELECTED_FILTER"
+      setFilter: "wFilter/SET_SELECTED_FILTER"
     })
   }
 }

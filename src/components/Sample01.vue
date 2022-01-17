@@ -21,7 +21,7 @@
 
 <script>
 import loadImage from 'blueimp-load-image';
-import ImageEditor from "./editor/ImageEditor";
+import ImageEditor from "./menu/ImageEditor";
 
 const MAX_WIDTH = 800;
 const MIN_WIDTH = 300;
@@ -29,6 +29,7 @@ const MAX_HEIGHT = 800;
 const MIN_HEIGHT = 300;
 
 export default {
+  name: "Sample01",
   components: {
     ImageEditor
   },
@@ -43,11 +44,6 @@ export default {
       originalBlob: null,
       warnMsg: undefined,
     };
-  },
-  computed: {
-    // isError() {
-    //   return 0 < this.errorMessages;
-    // },
   },
   beforeDestroy() {
     this.clear();
@@ -105,6 +101,9 @@ export default {
       const filename = indexOfP !== -1 ? file.name.substring(0, indexOfP) : file.name;
       this.$store.commit("SET_FILENAME", filename);
     },
+    /**
+     * Clear
+     */
     clear() {
       if (this.imgSrc) {
         URL.revokeObjectURL(this.imgSrc);

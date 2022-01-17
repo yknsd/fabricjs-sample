@@ -85,8 +85,8 @@ export default {
       fontAlign: "wText/fontAlign",
       drawingColor: "drawingColor",
       drawingWidth: "drawingWidth",
-      selectedFilterIndex: "selectedFilterIndex",
-      filters: "filters"
+      selectedFilterIndex: "wFilter/selectedFilterIndex",
+      filters: "wFilter/filters"
     }),
     canvasW() {
       return this.$props.canvasWidth < 400 ? 400 : this.$props.canvasWidth;
@@ -232,12 +232,6 @@ export default {
       }
     },
     /**
-     * Mouse move
-     */
-    mouseMove(event) {
-      console.log("mouse move", event);
-    },
-    /**
      * Mouse up
      */
     mouseUp(event) {
@@ -287,7 +281,6 @@ export default {
         mt: false
       });
       this.$set(this, "textBox", textBox);
-      // textBox.onKeyDown();
     },
     /**
      * Drawing
@@ -306,10 +299,6 @@ export default {
         this.canvas.remove(obj);
       }
     },
-    exportCanvas() {
-      console.log("export canvas");
-
-    }
   }
 }
 </script>
