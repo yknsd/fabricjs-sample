@@ -3,11 +3,11 @@ This is sample app for [fabricjs](https://github.com/fabricjs/fabric.js)
 
 ## Function
 
-* Trim
 * Filter
 * Text
 * Free Drawing
-* Erase
+* Trash
+* Export
 
 ## Version
 
@@ -25,3 +25,6 @@ yarn
 yarn serve
 ```
 
+## Demo
+
+https://fabricjs-sample.pages.dev/
