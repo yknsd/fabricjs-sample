@@ -23,11 +23,11 @@ export default {
   data() {
     return {
       functions: [
-        {name: "trim", icon: "mdi-content-cut", color: "#E57373"},
+        // {name: "trim", icon: "mdi-content-cut", color: "#E57373"},
         {name: "filter", icon: "mdi-image-filter-black-white", color: "#F06292"},
         {name: "text", icon: "mdi-format-text", color: "#AB47BC"},
         {name: "drawing", icon: "mdi-lead-pencil", color: "#7E57C2"},
-        {name: "erase", icon: "mdi-eraser", color: "#5C6BC0"},
+        // {name: "erase", icon: "mdi-eraser", color: "#5C6BC0"},
         {name: "trash", icon: "mdi-trash-can", color: "#039BE5"},
         {name: "export", icon: "mdi-file-export", color: "#00ACC1"}
       ],

@@ -7,7 +7,7 @@
       mode="hexa"
       swatches-max-height="200"
       class="mb-3"
-      :value="colorRgba"
+      :value="colorCode"
       @input="setColor"
       style="background-color: rgba(1,1,1,0)"
     ></v-color-picker>
@@ -51,33 +51,28 @@
 
 <script>
 import { mapGetters } from "vuex";
-// import { debounce } from "lodash";
 
 export default {
+  name: "FooterText",
   data() {
     return {
-      font: "TimesNewRoman",
-      rgba: "",
-      size: "20",
       sizeItems: ["10", "20", "30", "40"],
-      weight: "200",
       weightItems: ["100", "200", "400", "600", "800"],
       icons: ["mdi-format-bold", "mdi-format-underline", "mdi-format-strikethrough", "mdi-format-italic"],
-      alignIcons: ["mdi-format-align-right", "mdi-format-align-center", "mdi-format-align-left"],
-      addUnderLine: false,
-      addLineThrough: false
+      alignIcons: ["mdi-format-align-left", "mdi-format-align-center", "mdi-format-align-right"],
+      fabricCanvas: undefined,
     }
   },
   computed: {
     ...mapGetters({
-      fontFamilyList: "fontFamilyList",
-      fontFamily:"fontFamily",
-      underline: "underline",
-      lineThrough: "lineThrough",
-      fontStyle: "fontStyle",
-      colorRgba: "colorRgba",
-      fontWeight: "textWeight",
-      fontAlign: "fontAlign"
+      fontFamilyList: "wText/fontFamilyList",
+      fontFamily:"wText/fontFamily",
+      underline: "wText/underline",
+      lineThrough: "wText/lineThrough",
+      fontStyle: "wText/fontStyle",
+      colorCode: "wText/colorCode",
+      fontWeight: "wText/textWeight",
+      fontAlign: "wText/fontAlign"
     }),
     alignIndex() {
       switch (this.fontAlign) {
@@ -90,36 +85,63 @@ export default {
       }
     }
   },
+  created() {
+    const canvas = document.getElementById("canvasEl").fabric;
+    this.$set(this, "fabricCanvas", canvas);
+  },
   methods: {
     setFontFamily(name) {
       console.log("name:", name);
-      this.$store.commit("SET_FONT_FAMILY", name);
+      this.$store.commit("wText/SET_FONT_FAMILY", name);
+      this.updateActiveObject("fontFamily", name);
     },
     setColor(code) {
       console.log("setColor:", code);
-      this.$store.commit("SET_COLOR_RGBA", code);
+      this.$store.commit("wText/SET_COLOR_CODE", code);
+      this.updateActiveObject("fill", code);
     },
     setSize(val) {
       console.log("val:", val);
-      this.$store.commit("SET_TEXT_SIZE", val);
+      this.$store.commit("wText/SET_TEXT_SIZE", val);
+      this.updateActiveObject("fontSize", val);
     },
     setWeight() {
-      const weight = this.fontWeight === "200" ? "600" : "200";
-      this.$store.commit("SET_TEXT_WEIGHT", weight);
+      console.log("fontWeight:", this.fontWeight);
+      const weight = this.fontWeight === 200 ? 600 : 200;
+      this.$store.commit("wText/SET_TEXT_WEIGHT", weight);
+      this.updateActiveObject("fontWeight", weight);
     },
     setUnderLine() {
-      this.$store.commit("SET_UNDERLINE", !this.underline);
+      const bol = !this.underline;
+      this.$store.commit("wText/SET_UNDERLINE", bol);
+      this.updateActiveObject("underline", bol);
     },
     setLineThrough() {
-      this.$store.commit("SET_LINE_THROUGH", !this.lineThrough);
+      const bol = !this.lineThrough;
+      this.$store.commit("wText/SET_LINE_THROUGH", bol);
+      this.updateActiveObject("linethrough", bol);
     },
     setStyle() {
       const style = this.fontStyle === "normal" ? "italic" : "normal";
-      this.$store.commit("SET_FONT_STYLE", style);
+      this.$store.commit("wText/SET_FONT_STYLE", style);
+      this.updateActiveObject("fontStyle", style);
     },
     setAlign(index) {
-      const val = index === 0 ? "right" : index === 2 ? "left" : "center";
-      this.$store.commit("SET_FONT_ALIGN", val);
+      const val = index === 0 ? "left" : index === 2 ? "right" : "center";
+      this.$store.commit("wText/SET_FONT_ALIGN", val);
+      this.updateActiveObject("textAlign", val);
+    },
+    /**
+     * @param option
+     * @param val
+     */
+    updateActiveObject(option, val) {
+      const textBox = this.fabricCanvas.getActiveObject();
+      if (textBox) {
+        textBox.set(option, val);
+        textBox.setCoords();
+        this.fabricCanvas.requestRenderAll();
+      }
     }
   }
 }

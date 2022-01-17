@@ -28,13 +28,16 @@
 import { mapGetters } from "vuex";
 
 export default {
-  components: {},
+  name: "FooterDrawing",
   data() {
     return {
-      // color: "#42A5F5",
-      // width: 10,
-      widthItems: [ "2", "5", "10", "20", "50"]
+      widthItems: [ "2", "5", "10", "20", "50"],
+      fabricCanvas: undefined
     }
+  },
+  created() {
+    const canvas = document.getElementById("canvasEl").fabric;
+    this.$set(this, "fabricCanvas", canvas);
   },
   computed: {
     ...mapGetters({
@@ -43,12 +46,20 @@ export default {
     })
   },
   methods: {
-    setWidth(val) {
-      console.log("setWidth:", val);
-      this.$store.commit("SET_DRAWING_WIDTH", val);
+    setWidth(num) {
+      console.log("setWidth:", num);
+      this.$store.commit("SET_DRAWING_WIDTH", num);
+      if (this.fabricCanvas.freeDrawingBrush) {
+        this.$set(this.fabricCanvas.freeDrawingBrush, "width", num);
+        this.fabricCanvas.requestRenderAll();
+      }
     },
-    setColor(val) {
-      this.$store.commit("SET_DRAWING_COLOR", val);
+    setColor(code) {
+      this.$store.commit("SET_DRAWING_COLOR", code);
+      if (this.fabricCanvas.freeDrawingBrush) {
+        this.$set(this.fabricCanvas.freeDrawingBrush, "color", code);
+        this.fabricCanvas.requestRenderAll();
+      }
     }
   }
 }

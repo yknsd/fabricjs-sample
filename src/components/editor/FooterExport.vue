@@ -23,7 +23,6 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "FooterExport",
-  components: {},
   data() {
     return {
       format: 0,
@@ -33,9 +32,13 @@ export default {
   computed: {
     ...mapGetters(["filename"])
   },
+  beforeDestroy() {
+    this.revokeObjectURL();
+  },
   methods: {
     onClickExport() {
       console.log("onClickExport:", this.format);
+      this.revokeObjectURL();
       const canvas = document.getElementById("canvasEl").fabric;
       const a = this.$refs.saveData;
       a.download = this.filename;
@@ -55,6 +58,12 @@ export default {
         a.href = canvas.toDataURL(options);
       }
       // this.$refs.saveData.click();
+    },
+    revokeObjectURL() {
+      const href = this.$refs.saveData.href
+      if (href) {
+        window.URL.revokeObjectURL(href);
+      }
     }
   }
 }

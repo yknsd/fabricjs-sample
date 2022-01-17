@@ -12,19 +12,15 @@
       <Footer
         class="func-toggle"
         :style="`left: ${canvasW - 50}px;top: 25px;`"
-        @trim="trimImage"
-        @filter="filterImage"
         @drawing="drawing"
-        @erase="erase"
         @trash="trash"
-        @export="exportCanvas"
       />
-<!--      <FooterTrim v-if="selectedMenuIndex === 0" class="ma-auto sub-menu-div pa-1"/>-->
-      <FooterFilter v-if="selectedMenuIndex===1" class="ma-auto sub-menu-div pa-1"/>
-      <FooterText v-else-if="selectedMenuIndex===2" class="ma-auto sub-menu-div pa-1"/>
-      <FooterDrawing v-else-if="selectedMenuIndex === 3" class="ma-auto sub-menu-div pa-1"/>
-      <FooterErase v-else-if="selectedMenuIndex === 4" class="ma-auto sub-menu-div pa-1"/>
-      <FooterExport v-else-if="selectedMenuIndex === 6" class="ma-auto sub-menu-div pa-1" />
+      <!--      <FooterTrim v-if="selectedMenuIndex === 0" class="ma-auto sub-menu-div pa-1"/>-->
+      <FooterFilter v-if="selectedMenuIndex===0" class="ma-auto sub-menu-div pa-1"/>
+      <FooterText v-else-if="selectedMenuIndex===1" class="ma-auto sub-menu-div pa-1"/>
+      <FooterDrawing v-else-if="selectedMenuIndex === 2" class="ma-auto sub-menu-div pa-1"/>
+      <!--      <FooterErase v-else-if="selectedMenuIndex === 4" class="ma-auto sub-menu-div pa-1"/>-->
+      <FooterExport v-else-if="selectedMenuIndex === 4" class="ma-auto sub-menu-div pa-1"/>
     </v-card-text>
   </v-card>
 </template>
@@ -35,7 +31,7 @@ import Footer from "./Footer";
 import FooterText from "./FooterText";
 import {mapGetters} from "vuex";
 import FooterDrawing from "./FooterDrawing";
-import FooterErase from "./FooterErase";
+// import FooterErase from "./FooterErase";
 import FooterFilter from "./FooterFilter";
 import FooterExport from "./FooterExport";
 // import FooterTrim from "./FooterTrim";
@@ -47,9 +43,7 @@ const CANVAS_PADDING = 100;
 export default {
   components: {
     FooterExport,
-    // FooterTrim,
     FooterFilter,
-    FooterErase,
     Footer,
     FooterText,
     FooterDrawing
@@ -79,29 +73,26 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      "selectedMenuIndex",
-      "fontFamily",
-      "colorRgba",
-      "textSize",
-      "textWeight",
-      "underline",
-      "lineThrough",
-      "fontStyle",
-      "fontAlign",
-      "drawingColor",
-      "drawingWidth",
-      "selectedFilterIndex",
-      "filters"
-    ]),
+    ...mapGetters({
+      selectedMenuIndex: "selectedMenuIndex",
+      fontFamily: "wText/fontFamily",
+      colorCode: "wText/colorCode",
+      textSize: "wText/textSize",
+      textWeight: "wText/textWeight",
+      underline: "wText/underline",
+      lineThrough: "wText/lineThrough",
+      fontStyle: "wText/fontStyle",
+      fontAlign: "wText/fontAlign",
+      drawingColor: "drawingColor",
+      drawingWidth: "drawingWidth",
+      selectedFilterIndex: "selectedFilterIndex",
+      filters: "filters"
+    }),
     canvasW() {
       return this.$props.canvasWidth < 400 ? 400 : this.$props.canvasWidth;
     },
     fabricImage() {
       return this.canvas.item(0);
-    },
-    fabricTrimRect() {
-      return this.canvas.item(1);
     }
   },
   async mounted() {
@@ -131,39 +122,39 @@ export default {
             mr: false,
             mtr: false
           });
-          const backGreyOut = new fabric.Rect({
-            fill: 'rgb(110,108,108, 0.6)',
-            stroke: 'transparent',
-            // opacity: 1,
-            width: width,
-            height: height,
-            originX: "center",
-            originY: "center",
-            selectable: false,
-            dirty: true
-          });
-          backGreyOut.clipPath = new fabric.Rect({
-            fill: 'transparent',
-            stroke: 'rgba(232,40,207,0.7)',
-            strokeWidth: 3,
-            width: objImg.width * scale,
-            height: objImg.height * scale,
-            cornerStrokeColor: "rgba(1,1,1,0)",
-            originX: "center",
-            originY: "center",
-            selectable: true,
-            evented: true,
-            inverted: true,
-            // dirty: true
-          });
+          // const backGreyOut = new fabric.Rect({
+          //   fill: 'rgb(110,108,108, 0.6)',
+          //   stroke: 'transparent',
+          //   // opacity: 1,
+          //   width: width,
+          //   height: height,
+          //   originX: "center",
+          //   originY: "center",
+          //   selectable: false,
+          //   dirty: true
+          // });
+          // backGreyOut.clipPath = new fabric.Rect({
+          //   fill: 'transparent',
+          //   stroke: 'rgba(232,40,207,0.7)',
+          //   strokeWidth: 3,
+          //   width: objImg.width * scale,
+          //   height: objImg.height * scale,
+          //   cornerStrokeColor: "rgba(1,1,1,0)",
+          //   originX: "center",
+          //   originY: "center",
+          //   selectable: true,
+          //   evented: true,
+          //   inverted: true,
+          //   // dirty: true
+          // });
           // const group = new fabric.Group([ objImg, backGreyOut], {
           //   selectable: false,
           //   evented: false,
           // });
           canvas.add(objImg);
           canvas.centerObject(objImg);
-          canvas.add(backGreyOut);
-          canvas.centerObject(backGreyOut);
+          // canvas.add(backGreyOut);
+          // canvas.centerObject(backGreyOut);
           canvas.renderAll();
           resolve();
         });
@@ -179,92 +170,23 @@ export default {
     if (this.canvas) {
       this.canvas.off("mouse:down", this.mouseDown);
       this.canvas.off("mouse:up", this.mouseUp);
+      this.canvas.dispose();
     }
   },
   watch: {
     selectedMenuIndex(newIndex, oldIndex) {
       console.log("selectedMenuIndex:", oldIndex, "->", newIndex);
-      // this.canvas.sendToBack(image);
-      // const rect = bkGreyRect.clipPath;
       switch (oldIndex) {
-        case 0:
-          // this.canvas.bringToFront(this.fabricTrimRect);
-          this.fabricTrimRect.visible = false;
-          break;
-        case 2:
+        case 1:
           this.canvas.discardActiveObject();
           break;
-        case 3:
+        case 2:
           this.$set(this.canvas, "isDrawingMode", false);
           break;
         default:
           break;
       }
       this.canvas.requestRenderAll();
-    },
-    fontFamily(name) {
-      const textBox = this.canvas.getActiveObject();
-      if (textBox) {
-        textBox.set("fontFamily", name);
-        textBox.setCoords();
-        this.canvas.requestRenderAll();
-      }
-    },
-    colorRgba(val) {
-      const textBox = this.canvas.getActiveObject();
-      if (textBox) {
-        textBox.set("fill", val);
-        textBox.setCoords();
-        this.canvas.requestRenderAll();
-      }
-    },
-    textSize(size) {
-      const textBox = this.canvas.getActiveObject();
-      if (textBox) {
-        textBox.set("fontSize", size);
-        textBox.setCoords();
-        this.canvas.requestRenderAll();
-      }
-    },
-    textWeight(weight) {
-      const textBox = this.canvas.getActiveObject();
-      if (textBox) {
-        textBox.set("fontWeight", weight);
-        textBox.setCoords();
-        this.canvas.requestRenderAll();
-      }
-    },
-    underline(isShow) {
-      const textBox = this.canvas.getActiveObject();
-      if (textBox) {
-        textBox.set("underline", isShow);
-        textBox.setCoords();
-        this.canvas.requestRenderAll();
-      }
-    },
-    lineThrough(isShow) {
-      const textBox = this.canvas.getActiveObject();
-      if (textBox) {
-        textBox.set("linethrough", isShow);
-        textBox.setCoords();
-        this.canvas.requestRenderAll();
-      }
-    },
-    fontStyle(style) {
-      const textBox = this.canvas.getActiveObject();
-      if (textBox) {
-        textBox.set("fontStyle", style);
-        textBox.setCoords();
-        this.canvas.requestRenderAll();
-      }
-    },
-    fontAlign(align) {
-      const textBox = this.canvas.getActiveObject();
-      if (textBox) {
-        textBox.set("textAlign", align);
-        textBox.setCoords();
-        this.canvas.requestRenderAll();
-      }
     },
     selectedFilterIndex(newInd) {
       console.log("watch.selectedFilterIndex:", newInd);
@@ -280,17 +202,6 @@ export default {
       }
       img.applyFilters();
       this.canvas.requestRenderAll();
-    },
-    drawingWidth(val) {
-      if (this.canvas.freeDrawingBrush) {
-        this.$set(this.canvas.freeDrawingBrush, "width", val);
-        this.canvas.requestRenderAll();
-      }
-    },
-    drawingColor(code) {
-      if (this.canvas.freeDrawingBrush) {
-        this.canvas.freeDrawingBrush.color = code;
-      }
     }
   },
   methods: {
@@ -304,7 +215,7 @@ export default {
       const activeObj = this.canvas.getActiveObject();
       console.log("activeObj:", activeObj);
       console.log("menuIndex:", this.selectedMenuIndex);
-      if (this.selectedMenuIndex === 2) {
+      if (this.selectedMenuIndex === 1) {
         console.log("textBox:", this.textBox);
         if (this.textBox) {
           console.log("Exit Edit Mode");
@@ -332,60 +243,17 @@ export default {
     mouseUp(event) {
       console.log("mouse up:", event);
       console.log("menuIndex:", this.selectedMenuIndex);
-      const pointer = event.pointer;
-      if (this.selectedMenuIndex === 0) {
-        this.fabricTrimRect.clipPath.set({
-          width: Math.abs(this.mouseDownX - pointer.x),
-          height: Math.abs(this.mouseDownY - pointer.y)
-        });
-        this.fabricTrimRect.clipPath.setCoords();
-        this.canvas.requestRenderAll();
-        console.log("after clipPath:", this.fabricTrimRect.clipPath);
-      }
-    },
-    /**
-     * Trim
-     */
-    trimImage() {
-      console.log(">>>> trim image:");
-      this.canvas.discardActiveObject();
-      this.canvas.forEachObject(function (object) {
-        object.selectable = false;
-      });
-      // let rect = undefined;
-      const rect = this.fabricTrimRect;
-      rect.visible = true;
-      // if(group && !group.clipPath) {
-      //   const image = group.item(0);
-      //   rect = new fabric.Rect({
-      //     fill: 'transparent',
-      //     stroke: 'rgba(232,40,207,0.7)',
-      //     strokeWidth: 3,
-      //     opacity: 1,
-      //     width: image.width * image.scaleX / 2,
-      //     height: image.height * image.scaleX / 2,
-      //     visible: true,
-      //     cornerStrokeColor: "rgba(1,1,1,0)",
-      //     originX: "center",
-      //     originY: "center"
+      // const pointer = event.pointer;
+      // if (this.selectedMenuIndex === 0) {
+      //   this.fabricTrimRect.clipPath.set({
+      //     width: Math.abs(this.mouseDownX - pointer.x),
+      //     height: Math.abs(this.mouseDownY - pointer.y)
       //   });
-      //   group.set({
-      //     clipPath: rect
-      //   });
-      //   console.log("trim square:", rect);
-      //   // this.canvas.setActiveObject(rect);
-      //   // this.canvas.setActiveObject(rect);
-      // } else {
-      //   // const bkGreyOut = this.canvas.item(1);
-      //   // bkGreyOut.visible = true;
-      //   // this.canvas.setActiveObject(group.clipPath);
+      //   this.fabricTrimRect.clipPath.setCoords();
+      //   this.canvas.requestRenderAll();
+      //   console.log("after clipPath:", this.fabricTrimRect.clipPath);
       // }
-      this.canvas.requestRenderAll();
     },
-    /**
-     * Filter
-     */
-    filterImage() {},
     /**
      * Add text
      */
@@ -397,7 +265,7 @@ export default {
           editable: true,
           textAlign: 'center',
           charSpacing: 50,
-          fill: this.colorRgba,
+          fill: this.colorCode,
           fontFamily: this.fontFamily,
           fontSize: this.textSize,
           fontWeight: this.textWeight,
@@ -430,17 +298,11 @@ export default {
       this.$set(this.canvas.freeDrawingBrush, "width", this.drawingWidth);
       this.canvas.isDrawingMode = true;
     },
-    /**
-     * Erase
-     */
-    erase() {
-      console.log("erase");
-    },
     trash() {
       const obj = this.canvas.getActiveObject();
       console.log("active object:", obj);
       console.log("size:", this.canvas.size());
-      if (obj && 2 < this.canvas.size()) {
+      if (obj && 1 < this.canvas.size()) {
         this.canvas.remove(obj);
       }
     },
